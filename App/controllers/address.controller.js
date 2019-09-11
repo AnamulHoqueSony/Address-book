@@ -38,7 +38,60 @@ exports.findAll = (req, res) => {
     });
 
 };
+exports.findOne = (req, res) => {
+    Contract.findById(req.params.AddId)
+    .then(contract => {
+        if(!contract) {
+            return res.status(404).send({
+                message: "Note not found with id " + req.params.AddId
+            });            
+        }
+        res.send(contract);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Note not found with id " + req.params.AddId
+            });                
+        }
+        return res.status(500).send({
+            message: "Error retrieving note with id " + req.params.AddId
+        });
+    });
+};
+exports.update = (req, res) => {
+    // Validate Request
+    if(!req.body.name) {
+        return res.status(400).send({
+            message: "Note name can not be empty"
+        });
+    }
 
+    Contract.findByIdAndUpdate(req.params.AddId, {
+        name: req.body.name,
+        phone:req.body.phone,
+        postcode:req.body.postcode,
+        email:req.body.email,
+        city: req.body.city
+        
+    }, {new: true})
+    .then(contract => {
+        if(!contract) {
+            return res.status(404).send({
+                message: "Note not found with id " + req.params.AddId
+            });
+        }
+        res.send(contract);
+    }).catch(err => {
+        if(err.kind === 'ObjectId') {
+            return res.status(404).send({
+                message: "Note not found with id " + req.params.AddId
+            });                
+        }
+        return res.status(500).send({
+            message: "Error updating note with id " + req.params.AddId
+        });
+    });
+};
 exports.delete = (req, res) => {
     Contract.findByIdAndRemove(req.params.AddId)
     .then(data=> {

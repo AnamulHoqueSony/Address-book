@@ -8,9 +8,9 @@ module.exports = (app) =>{
 
    app.get('/contract',contract.findAll);
 
-   //app.get('/address/:addId',address.findOne);
+   app.get('/contract/:addId',contract.findOne);
 
-   //app.put('/address/:addId',address.update);
+   app.put('/contract/:addId',contract.update);
     
    app.delete('/contract/:addId',contract.delete);
 }
